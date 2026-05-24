@@ -1,0 +1,66 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.postgres
+    container_name: postgres_db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=poweradmin
+      - POSTGRES_PASSWORD=StaticPassword123!
+      - POSTGRES_DB=poweragent_kb
+    volumes:
+      - pg_data:/var/lib/postgresql # Fixed path
+    networks:
+      - search-network
+
+  web-ui:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: fastapi_web
+    working_dir: /workspace
+    command: uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+    ports:
+      - "8000:8000"
+    networks:
+      - search-network
+    depends_on:
+      - postgres
+    environment:
+      - PG_HOST=postgres_db
+      - PG_USER=poweradmin
+      - PG_PASSWORD=StaticPassword123!
+      - PG_DB=poweragent_kb
+
+  pwsh-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.pwsh
+    container_name: pwsh_worker
+    volumes:
+      - pwsh_output:/workspace/output
+      - pwsh_logs:/workspace/logs
+    working_dir: /workspace
+    stdin_open: true
+    tty: true
+    networks:
+      - search-network
+    depends_on:
+      - postgres
+    environment:
+      - PG_HOST=postgres_db
+      - PG_USER=poweradmin
+      - PG_PASSWORD=StaticPassword123!
+      - PG_DB=poweragent_kb
+      - TERM=xterm-256color
+      - DOTNET_SYSTEM_CONSOLE_ALLOW_ANSI_COLOR_REDIRECTION=1
+
+networks:
+  search-network:
+    driver: bridge
+
+volumes:
+  pg_data:
+  pwsh_output:
+  pwsh_logs:

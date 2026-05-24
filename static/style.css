@@ -1,0 +1,373 @@
+:root {
+  --bg-dark: #11111b;
+  --bg-surface: #1e1e2e;
+  --bg-sidebar: #181825;
+  --text-main: #ffffff;
+  --text-dim: #a6adc8;
+  --date-time: #070c21;
+  --accent: #89b4fa;
+  --msg-type: #070c21;
+  --user-msg: #0c6a1f;
+  --msg-user-color: #e1f6e5;
+  --msg-bot-color: #4cc0ff;
+  --bot-msg: #45475a;
+  --border: #313244;
+  --code-bg: #0f1117;
+  --copy-btn: #5e81ac;
+  --copy-btn-hover: #81a1c1;
+  --section-info-new-color: #9effd1;
+  --section-agentic-new-color: darkred;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-dark);
+  color: var(--text-main);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ────────────────────────────────────────────────
+   Header & View Switcher
+───────────────────────────────────────────────── */
+.main-header {
+  height: 60px;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+.view-switcher {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  font-weight: 500;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--border);
+  transition: 0.3s;
+  border-radius: 20px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: var(--accent);
+}
+
+input:checked + .slider:before {
+  transform: translateX(22px);
+}
+
+/* ────────────────────────────────────────────────
+   Main Layout
+───────────────────────────────────────────────── */
+.app-container {
+  flex: 1;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.view-content {
+  display: none;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.view-content.active {
+  display: flex;
+  position: relative;
+}
+
+/* ────────────────────────────────────────────────
+   Sidebar (Topics)
+───────────────────────────────────────────────── */
+.sidebar {
+  width: 280px;
+  background: var(--bg-sidebar);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 8px;
+}
+
+.sidebar h3 {
+  margin: 0;
+  padding: 0;
+  font-size: 1.1rem;
+  border: none;
+}
+
+#topicsContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 10px 20px;
+}
+
+.topic-item {
+  padding: 12px 15px;
+  margin-bottom: 4px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topic-item:hover {
+  background: var(--user-msg);
+}
+
+.topic-item.active {
+  background: var(--accent);
+  color: var(--bg-dark);
+  font-weight: bold;
+}
+
+.reload-btn {
+  background: var(--accent);
+  color: var(--bg-dark);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.reload-btn:hover {
+  opacity: 0.9;
+}
+
+/* ────────────────────────────────────────────────
+   Chat Area
+───────────────────────────────────────────────── */
+.chat-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-surface);
+}
+
+.chat-header {
+  padding: 12px 20px;
+  background: var(--bg-sidebar);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.chat-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+#chatWindow {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.msg {
+  max-width: 75%;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  border-radius: 15px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  position: relative;
+}
+
+.msg.user {
+  align-self: flex-end;
+  background: var(--msg-user-color);
+  color: var(--bg-dark);
+  border-bottom-right-radius: 2px;
+}
+
+.msg.bot {
+  align-self: flex-start;
+  background: var(--msg-bot-color);
+  color: var(--text-main);
+  border-bottom-left-radius: 2px;
+}
+
+.msg-header {
+  font-size: 0.78rem;
+  color: var(--date-time);
+  margin-bottom: 8px;
+  opacity: 0.85;
+}
+
+.section {
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.section.agentic {
+  border-radius: 10px;
+  background: rgba(137, 180, 250, 0.12);
+  border: 1px solid rgba(137, 180, 250, 0.3);
+  background-color: var(--section-agentic-new-color);
+}
+
+.section.info {
+  border-radius: 10px;
+  background-color: var(--section-info-new-color);
+  background: rgba(180, 190, 254, 0.08);
+  border: 1px solid rgba(180, 190, 254, 0.2);
+}
+
+.section strong {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--msg-type);
+}
+
+.section ul {
+  margin: 8px 0 8px 20px;
+  padding-left: 0;
+  list-style-type: none;
+}
+
+.section ul li {
+  margin-bottom: 6px;
+  position: relative;
+  padding-left: 18px;
+}
+
+.section ul li::before {
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--msg-type);
+}
+
+.text-block {
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+.text-block.plain {
+  white-space: pre-wrap;
+}
+
+/* Code blocks + copy button */
+.code-wrapper {
+  position: relative;
+  margin: 10px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--code-bg);
+}
+
+.code-wrapper pre {
+  margin: 0;
+  padding: 14px 16px;
+  overflow-x: auto;
+  font-size: 0.92rem;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--copy-btn);
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  z-index: 2;
+  opacity: 0.9;
+  transition: all 0.15s;
+}
+
+.copy-btn:hover {
+  opacity: 1;
+  background: var(--copy-btn-hover);
+}
+
+/* Plain text copy area */
+.plain-copy {
+  margin-top: 6px;
+  text-align: right;
+}
+
+/* Sentinels for infinite scroll */
+.sentinel {
+  height: 20px;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+/* Vector view placeholder */
+#vectorView {
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.placeholder-card {
+  padding: 40px;
+  background: var(--bg-sidebar);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+}

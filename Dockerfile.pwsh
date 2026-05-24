@@ -1,0 +1,52 @@
+FROM ubuntu:22.04
+
+ENV DEBIAN_FRONTEND=noninteractive
+
+# Install dependencies, PowerShell, and Python
+RUN apt-get update && apt-get install -y \
+    wget \
+    apt-transport-https \
+    software-properties-common \
+    python3.10 \
+    python3-pip \
+    libpq-dev \
+    && wget -q "https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb" \
+    && dpkg -i packages-microsoft-prod.deb \
+    && apt-get update \
+    && apt-get install -y powershell \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace
+
+# Copy HyeJack-Powershell and config into the image
+COPY HyeJack-Powershell /workspace/HyeJack-Powershell
+COPY hyejack_powershell_configuration.toml /workspace/
+
+# Make them immutable (read-only)
+RUN chmod -R 555 /workspace/HyeJack-Powershell && \
+    chmod 444 /workspace/hyejack_powershell_configuration.toml
+
+# Create directories for volumes
+RUN mkdir -p /workspace/output /workspace/logs
+
+# Create non-root user
+RUN useradd -m -s /bin/bash pwshuser && \
+    chown -R pwshuser:pwshuser /workspace && \
+    chmod 755 /workspace/output /workspace/logs
+
+USER pwshuser
+
+# Configure PowerShell profile - DISABLE PSReadLine to prevent errors
+RUN mkdir -p /home/pwshuser/.config/powershell && \
+    echo 'Install-Module PSReadLine -RequiredVersion 2.3.6 -Force -AllowClobber' >> /home/pwshuser/.config/powershell/Microsoft.PowerShell_profile.ps1 && \
+    echo '' >> /home/pwshuser/.config/powershell/Microsoft.PowerShell_profile.ps1 && \
+    echo 'Write-Host "--- PowerAgent Worker Initializing ---" -ForegroundColor Cyan' >> /home/pwshuser/.config/powershell/Microsoft.PowerShell_profile.ps1 && \
+    echo 'Write-Host "HyeJack-Powershell available at: /workspace/HyeJack-Powershell" -ForegroundColor Green' >> /home/pwshuser/.config/powershell/Microsoft.PowerShell_profile.ps1 && \
+    echo 'Write-Host "Configuration: /workspace/hyejack_powershell_configuration.toml" -ForegroundColor Green' >> /home/pwshuser/.config/powershell/Microsoft.PowerShell_profile.ps1 && \
+    echo '' >> /home/pwshuser/.config/powershell/Microsoft.PowerShell_profile.ps1 && \
+    echo 'Set-Location /workspace' >> /home/pwshuser/.config/powershell/Microsoft.PowerShell_profile.ps1
+
+# Set TERM environment variable
+ENV TERM=xterm-256color
+
+CMD ["pwsh"]

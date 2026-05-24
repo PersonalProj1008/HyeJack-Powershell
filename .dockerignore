@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+logs/
+
+# Local volumes
+pg_data/
+pwsh_output/
+pwsh_logs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Don't ignore these - they need to be copied
+!app.py
+!templates/
+!static/
+!HyeJack-Powershell/
+!hyejack_powershell_configuration.toml
+!init.sql

@@ -1,0 +1,21 @@
+FROM python:3.10-slim
+
+WORKDIR /workspace
+
+# Copy all web files into the image
+COPY app.py .
+COPY templates ./templates
+COPY static ./static
+
+# Install Python dependencies
+RUN pip install --no-cache-dir fastapi uvicorn psycopg2-binary jinja2 inquirerpy rich pydantic requests
+
+
+# Make sure files are readable
+RUN chmod -R 755 /workspace
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+
+

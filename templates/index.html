@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HyeJack-Powershell Chat History</title>
+    <link rel="stylesheet" href="/static/style.css" />
+    <!-- Optional: for better code highlighting (you can remove if you prefer plain) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css"
+    />
+  </head>
+  <body>
+    <header class="main-header">
+      <div class="logo">Chat History</div>
+      <div class="view-switcher">
+        <span>History</span>
+        <label class="switch">
+          <input type="checkbox" id="viewToggle" />
+          <span class="slider round"></span>
+        </label>
+        <span>Vector Status</span>
+      </div>
+    </header>
+
+    <main class="app-container">
+      <!-- History View -->
+      <div id="historyView" class="view-content active">
+        <aside class="sidebar" id="topicList">
+          <div class="sidebar-header">
+            <h3>Topics</h3>
+            <button id="reloadTopicsBtn" class="reload-btn">
+              ↻ Load Topics
+            </button>
+          </div>
+          <div id="topicsContainer"></div>
+          <div id="topicSentinel"></div>
+        </aside>
+
+        <section class="chat-area">
+          <div class="chat-header" id="chatHeader" style="display: none">
+            <h2 id="currentTopicTitle"></h2>
+            <button id="loadPrevConvBtn" class="reload-btn">
+              ↻ Load Previous Conversation
+            </button>
+          </div>
+
+          <div id="chatWindow">
+            <div id="chatSentinel"></div>
+            <div id="messagesContainer"></div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Vector View (placeholder) -->
+      <div id="vectorView" class="view-content">
+        <div class="placeholder-card">
+          <h2>Vector-Embedding Status</h2>
+          <p>System mapping and status monitoring will appear here.</p>
+        </div>
+      </div>
+    </main>
+
+    <script src="/static/script.js"></script>
+    <!-- Optional: Prism for better code highlighting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  </body>
+</html>
